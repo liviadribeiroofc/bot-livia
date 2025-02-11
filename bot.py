@@ -3,7 +3,8 @@ import logging
 import json
 import requests
 from aiogram import Bot, Dispatcher, types
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.enums import ParseMode
 from aiogram.utils import executor
 
 # Configurações
@@ -11,7 +12,7 @@ API_TOKEN = '8181161126:AAFn5WTIbaPmgk3O5iKXoiNZOpoZGow-9dA'
 MERCADO_PAGO_ACCESS_TOKEN = '4541980271030306'
 GRUPO_PRIVADO_BASE_LINK = 'https://t.me/+Eu8z8aoY_fE1ZTU5'
 
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=API_TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot)
 
 # Mensagem de saudação
