@@ -61,7 +61,8 @@ async def process_payment(callback_query: types.CallbackQuery):
     keyboard.add(InlineKeyboardButton("Voltar ↩️", callback_data="voltar"))
     
     if qr_code:
-        await bot.send_message(callback_query.from_user.id, f"Escaneie o QR Code PIX abaixo:
+        await bot.send_message(callback_query.from_user.id, f"Escaneie o QR Code PIX abaixo:\n{qr_code}", reply_markup=keyboard)
+        
 {qr_code}", reply_markup=keyboard)
     else:
         await bot.send_message(callback_query.from_user.id, "Erro ao gerar pagamento. Tente novamente mais tarde.")
