@@ -5,7 +5,6 @@ import requests
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.enums import ParseMode
-from aiogram import executor
 
 # Configurações
 API_TOKEN = '8181161126:AAFn5WTIbaPmgk3O5iKXoiNZOpoZGow-9dA'
@@ -91,6 +90,9 @@ async def voltar(callback_query: types.CallbackQuery):
     
     await bot.send_message(callback_query.from_user.id, "Escolha novamente o tipo de pagamento:", reply_markup=keyboard)
 
-if __name__ == '__main__':
+async def main():
     logging.basicConfig(level=logging.INFO)
-    asyncio.run(dp.start_polling(bot))
+    await dp.start_polling(bot)
+
+if __name__ == '__main__':
+    asyncio.run(main())
