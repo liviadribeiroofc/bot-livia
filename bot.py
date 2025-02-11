@@ -47,7 +47,7 @@ def gerar_pagamento_pix(valor: float):
     response = requests.post(url, headers=headers, json=data)
     return response.json()
 
-@router.message_handler(commands=['start'])
+@router.message(commands=['start'])
 async def send_welcome(message: types.Message):
     keyboard = InlineKeyboardMarkup()
     keyboard.add(InlineKeyboardButton("Pagamento vitalício", callback_data="vitalicio"))
