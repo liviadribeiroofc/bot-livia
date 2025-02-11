@@ -2,7 +2,7 @@ import asyncio
 import logging
 import json
 import requests
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher, types, Router
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
@@ -14,8 +14,9 @@ GRUPO_PRIVADO_BASE_LINK = 'https://t.me/+Eu8z8aoY_fE1ZTU5'
 
 bot = Bot(token=API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
+router = Router()
 
-dp.include_router(bot)
+dp.include_router(router)
 
 # Mensagem de saudação
 SAUDACAO = """
@@ -46,14 +47,14 @@ def gerar_pagamento_pix(valor: float):
     response = requests.post(url, headers=headers, json=data)
     return response.json()
 
-@dp.message_handler(commands=['start'])
+@router.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
     keyboard = InlineKeyboardMarkup()
     keyboard.add(InlineKeyboardButton("Pagamento vitalício", callback_data="vitalicio"))
     
     await message.reply(SAUDACAO, reply_markup=keyboard)
 
-@dp.callback_query_handler(lambda c: c.data == 'vitalicio')
+@router.callback_query_handler(lambda c: c.data == 'vitalicio')
 async def process_payment(callback_query: types.CallbackQuery):
     valor = 19.99
     pagamento = gerar_pagamento_pix(valor)
@@ -69,7 +70,7 @@ async def process_payment(callback_query: types.CallbackQuery):
     else:
         await bot.send_message(callback_query.from_user.id, "Erro ao gerar pagamento. Tente novamente mais tarde.")
 
-@dp.callback_query_handler(lambda c: c.data == 'verificar')
+@router.callback_query_handler(lambda c: c.data == 'verificar')
 async def verificar_pagamento(callback_query: types.CallbackQuery):
     url = f"https://api.mercadopago.com/v1/payments/search?sort=date_created&criteria=desc"
     headers = {"Authorization": f"Bearer {MERCADO_PAGO_ACCESS_TOKEN}"}
@@ -84,7 +85,7 @@ async def verificar_pagamento(callback_query: types.CallbackQuery):
     keyboard.add(InlineKeyboardButton("Verificar pagamento", callback_data="verificar"))
     await bot.send_message(callback_query.from_user.id, "Pagamento não efetuado. Tente novamente.", reply_markup=keyboard)
 
-@dp.callback_query_handler(lambda c: c.data == 'voltar')
+@router.callback_query_handler(lambda c: c.data == 'voltar')
 async def voltar(callback_query: types.CallbackQuery):
     keyboard = InlineKeyboardMarkup()
     keyboard.add(InlineKeyboardButton("Pagamento vitalício", callback_data="vitalicio"))
